@@ -1,0 +1,62 @@
+%%manim -qk -v WARNING Video_03
+config.media_width = "100%"
+
+class Video_03(Scene):
+    def construct(self):
+
+        c = BLUE_D
+
+        Opening_Text = Text("What is the last digit of", color = c).shift(UP * 1.5)
+        Opening_expr = MathTex(r"3^{999}", color = c).next_to(Opening_Text, DOWN * 4.5).scale(3)
+
+        self.play(Write(Opening_Text))
+        self.wait(0.4)
+        self.play(Write(Opening_expr))
+        self.wait(1.8)
+        self.play(FadeOut(Opening_expr), FadeOut(Opening_Text), runtime=4.5)
+        self.wait(2.8)
+
+        expr1 = MathTex("3", " = ", "3", " \pmod{10}", color = c).shift(UP * 3).scale(2)
+        expr2 = MathTex(r"3^{2}", " = ", "9", " \pmod{10}", color = c).next_to(expr1, DOWN, buff = 1).scale(2)
+        expr3 = MathTex(r"3^{2}", " = ", "-1", " \pmod{10}", color = c).next_to(expr2, DOWN, buff = 1).scale(2)
+        expr4 = MathTex(r"(3^{2})^{499}", " = ", "(-1)^{499}", " \pmod{10}", color = c).next_to(expr3, DOWN, buff = 1).scale(2)
+
+        expr5 = MathTex(r"3^{998}", " = ", "-1", " \pmod{10}", color = c).shift(UP * 3).scale(2)
+        expr6 = MathTex(r"3\cdot3^{998}", " = ", "3(-1)", " \pmod{10}", color = c).next_to(expr5, DOWN, buff = 1).scale(2)
+        expr7 = MathTex(r"3^{999}", " = ", "-3", " \pmod{10}", color = c).next_to(expr6, DOWN, buff = 1).scale(2)
+        expr8 = MathTex(r"3^{999}", " = ", "7", " \pmod{10}", color = c).next_to(expr7, DOWN, buff = 1).scale(2)
+
+        self.play(Write(expr1))
+        self.add(expr1.copy())
+        self.wait(2)
+        self.play(TransformMatchingTex(expr1, expr2))
+        self.add(expr2.copy())
+        self.wait(3)
+        self.play(TransformMatchingTex(expr2, expr3))
+        self.add(expr3.copy())
+        self.wait(3.5)
+        self.play(TransformMatchingTex(expr3, expr4))
+        self.wait(3.5)
+
+        self.play(*[FadeOut(mob) for mob in self.mobjects if mob != expr4], ReplacementTransform(expr4, expr5, runtime=4))
+
+        self.add(expr5.copy())
+        self.wait(3)
+        self.play(TransformMatchingTex(expr5, expr6))
+        self.add(expr6.copy())
+        self.wait(3)
+        self.play(TransformMatchingTex(expr6, expr7))
+        self.add(expr7.copy())
+        self.wait(3)
+        self.play(TransformMatchingTex(expr7, expr8))
+        self.wait(2.5)
+
+        self.play(*[FadeOut(mob) for mob in self.mobjects])
+
+        OutroTex = VGroup(Tex("The last digit of ", color = c).scale(2),  MathTex(r"3^{999}", color=RED_D).scale(2), Tex(" is", color=c).scale(2)).arrange(RIGHT).shift(UP*2)
+        OutroExpr = MathTex(r"7", color=RED_D).scale(4).next_to(OutroTex, DOWN, buff=1.5)
+
+        self.play(Write(OutroTex))
+        self.play(Write(OutroExpr))
+        self.wait(4)
+        self.play(FadeOut(OutroTex, runtime=7), FadeOut(OutroExpr, runtime=7))
