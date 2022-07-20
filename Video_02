@@ -1,0 +1,95 @@
+%%manim -qh -s -v WARNING ConvergentSeriesThumbnail
+config.media_width = "100%"
+
+class ConvergentSeries(Scene):
+    def construct(self):
+        plane = NumberPlane()
+        self.add(plane)
+        openingText = Tex("What is the sum of this infinite series?", color = BLUE).shift(UP*1.7).scale(1.5)
+        openingEquation = MathTex("1", " + ", "\\frac{1}{2}", " + ", "\\frac{1}{4}", " + ", "\\frac{1}{8}", " + ",  "\\frac{1}{16}", " + ",  "\\cdots", color=BLUE).next_to(openingText, DOWN, buff=1).scale(1.7)
+        
+        self.play(Write(openingText))
+        self.wait(1)
+        self.play(Write(openingEquation))
+        self.wait(3)
+        self.play(FadeOut(openingText, openingEquation))
+        
+        
+        Text1 = Tex("Let the sum be ", "x", color= BLUE).shift(UP*2.7).scale(1.5)
+        Text1[1].color = RED
+        
+        Text2_0 = Tex("Now multiply the equation with ", color=BLUE).shift(UP*2.7).scale(1.5)
+        Text2_1 = MathTex(r" \frac{1}{2}", color=RED).next_to(Text2_0, RIGHT)
+        Text2 = VGroup(Text2_0, Text2_1)
+        
+        Eq1= MathTex("x", " = ", "1", " + ", "\\frac{1}{2}", " + ", "\\frac{1}{4}", " + ", "\\frac{1}{8}", " + ",  "\\frac{1}{16}", " + ",  "\\cdots", color=BLUE).next_to(Text1, DOWN, buff=1.2).scale(1.7)
+        Eq2 = Eq1.copy()
+        tempEq2= MathTex("\\frac{x}{2}", " = ", "\\frac{1}{2}", " + ", "\\frac{1}{4}", " + ", "\\frac{1}{8}", " + ",  "\\frac{1}{16}", " + ",  "\\cdots", color=BLUE).next_to(Eq1, DOWN, buff=1.2).scale(1.7)
+        
+        self.play(Write(Text1))
+        self.wait(0.8)
+        self.play(Write(Eq1))
+        self.add(Eq2)
+        self.wait(1.2)
+        self.play(ReplacementTransform(Text1, Text2))
+        self.wait(0.5)
+        self.play(TransformMatchingTex(Eq2, tempEq2))
+        
+        Eq2= MathTex("\\frac{x}{2}", " = ", "0", " + ", "\\frac{1}{2}", " + ", "\\frac{1}{4}", " + ", "\\frac{1}{8}", " + ",  "\\frac{1}{16}", " + ",  "\\cdots", color=BLUE).next_to(Eq1, DOWN, buff=1.2).scale(1.7).scale(10/17).move_to([-3,1.5,0],aligned_edge=LEFT+UP)
+
+        self.wait(1)
+        self.play(Uncreate(Text2))
+        self.play(Eq1.animate.scale(10/17).move_to([-3,3,0],aligned_edge=LEFT+UP), ReplacementTransform(tempEq2, Eq2))
+        self.wait(1)
+        subtractText = Text("Subtract",font_size=120, color=RED).move_to([0,-3,0])
+        self.play(Write(subtractText))
+
+        Eq2_neg = MathTex("- \\frac{x}{2}", " = ", "0", " - ", "\\frac{1}{2}", " - ", "\\frac{1}{4}", " - ", "\\frac{1}{8}", " - ",  "\\frac{1}{16}", " - ",  "\\cdots", color=BLUE).next_to(Eq1, DOWN, buff=1.2).scale(1.7).scale(10/17).move_to([-3.5,1.5,0],aligned_edge=LEFT+UP)
+        ln = Line([-4.5,0,0], [4,0,0], color=RED)
+        self.play(Create(ln), ReplacementTransform(Eq2, Eq2_neg))
+        self.play(Uncreate(subtractText))
+        self.add(Eq1.copy(), Eq2_neg.copy())
+
+        Eq3 = MathTex("x - \\frac{x}{2}", " = ", "1", " + ", "0", " + ", "0", " + ", "0", " + ", "0", " + ", "\\cdots", color=BLUE).move_to([-0.5,-1,0])
+        for i in range(6):
+            self.play(Transform(VGroup(Eq1[2*i],Eq2_neg[2*i]),Eq3[2*i]))
+            self.play(Write(Eq3[2*i+1]))
+        self.play(Write(Eq3[12]))
+        tempEq01 = MathTex(r"x - \frac{x}{2} = 1", color=BLUE).move_to([-2.9,-2.2,0])
+        self.wait(1.5)
+        self.play(Write(tempEq01))
+        
+
+        Eq4 = MathTex(r"x - \frac{x}{2} = 1",color=BLUE).scale(2).shift(UP*2.5)
+        Eq5 = MathTex(r"Or,  \frac{2x - x}{2} = 1", color= BLUE).move_to([-3.45,-0.5,0], aligned_edge=LEFT+UP).scale(2)
+        Eq6 = MathTex(r"\therefore x = 2", color= BLUE).move_to([-2.95,-2.5,0], aligned_edge=LEFT+UP).scale(2)
+      
+
+
+        OutGrp = Group(*[mob for mob in self.mobjects if mob != tempEq01])
+        self.play(FadeOut(OutGrp))
+        self.add(plane)
+        self.play(ReplacementTransform(tempEq01, Eq4))
+        self.wait(1.6)
+        self.play(Write(Eq5))
+        self.wait(1.6)
+        self.play(Write(Eq6))
+        self.wait(1.5)
+        
+        OutGrp2 = Group(*[mob for mob in self.mobjects])
+        
+        LastEq= MathTex("1", " + ", "\\frac{1}{2}", " + ", "\\frac{1}{4}", " + ", "\\frac{1}{8}", " + ",  "\\frac{1}{16}", " + ",  "\\cdots", " = ",  "2", color=BLUE).scale(2)
+ 
+        Proved = Tex("(Proved)", color=RED).shift(DOWN*3 + RIGHT*5).scale(1.6)
+        LastEq[-1].color = RED
+        
+        self.play(FadeOut(OutGrp2))
+        self.add(plane)
+        self.play(Write(LastEq))
+        self.play(Write(Proved))
+        self.wait(2)
+        self.play(FadeOut(LastEq), FadeOut(Proved), run_time= 5)
+        
+        self.wait(3)
+
+
